@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './UserForm.css';
 
@@ -31,10 +31,20 @@ const Register = () => {
         try {
             const response = await axios.post('http://localhost:3000/register', requestBody);
             console.log(response.data);
+            alert('회원가입이 완료되었습니다.');
+            window.location.href = '/login';
         } catch (error) {
             console.error(error);
         }
     }
+
+    useEffect(() => {
+        let isLogin = !!localStorage.getItem('userId');
+        if (isLogin !== false) {
+            window.location.href = '/';
+        } else {
+        }
+    }, []);
 
     return (
         <div className='form'>

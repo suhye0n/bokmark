@@ -70,7 +70,6 @@ const Main = () => {
         }
     };
 
-
     const fetchBookmarks = async () => {
         try {
             const response = await axios.get(`http://localhost:3000/bookmarks/${userId}`);
@@ -86,7 +85,7 @@ const Main = () => {
 
     useEffect(() => {
         let isLogin = !!localStorage.getItem('userId');
-        if (isLogin == false) {
+        if (isLogin === false) {
             window.location.href = '/login';
         } else {
         }

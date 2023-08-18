@@ -1,8 +1,8 @@
+import React, { useState, useEffect } from 'react';
 import './Header.css';
 import { TbLogout } from 'react-icons/tb';
 import { MdPersonOutline, MdLogin, MdPersonAddAlt } from 'react-icons/md';
 import { Link } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 
 const Header = () => {
     const [loginStyle, setLoginStyle] = useState({ display: 'none' });
@@ -15,7 +15,7 @@ const Header = () => {
 
     useEffect(() => {
         let isLogin = !!localStorage.getItem('userId');
-        if (isLogin == false) {
+        if (isLogin === false) {
             setLoginStyle({ display: 'none' });
             setLogoutStyle({ display: 'inline' });
         } else {

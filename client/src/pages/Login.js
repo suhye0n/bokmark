@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './UserForm.css';
 
@@ -21,6 +21,14 @@ const Login = () => {
       alert(error.response.data.message);
     }
   };
+
+  useEffect(() => {
+      let isLogin = !!localStorage.getItem('userId');
+      if (isLogin !== false) {
+          window.location.href = '/';
+      } else {
+      }
+  }, []);
 
   return (
     <div className='form'>
