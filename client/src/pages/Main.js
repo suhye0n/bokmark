@@ -92,8 +92,8 @@ const Main = () => {
     }, []);
 
     return (
-        <div>
-            <button onClick={() => openModal('add')}><TbBookmarkPlus /></button>
+        <div className='main'>
+            <button className='add' onClick={() => openModal('add')}><TbBookmarkPlus /></button>
 
             <ul>
                 {bookmarks.map((bookmark) => (
@@ -125,8 +125,8 @@ const Main = () => {
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
                         />
-                        <button className='confirm' onClick={handleSubmit}>{modalType === 'add' ? '추가' : '수정'}</button>
                         <button onClick={closeModal}>취소</button>
+                        <button className='confirm' onClick={handleSubmit}>{modalType === 'add' ? '추가' : '수정'}</button>
                     </div>
                 </div>
             )}

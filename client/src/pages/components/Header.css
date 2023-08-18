@@ -7,10 +7,15 @@
     background-color: #444;
 }
 
-#header * {
+#header a, #header div {
     display: inline-block;
     color: white;
     font-size: 25px;
+}
+
+#header a:hover, #header div:hover {
+    color: rgb(255, 123, 145);
+    transition: all .2s ease-in-out;
 }
 
 #header .menu {
