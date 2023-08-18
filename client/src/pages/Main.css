@@ -54,15 +54,12 @@
     width: 40%;
     margin: 5%;
     padding: 20px 0;
-    background-color: rgba(0, 0, 0, .5);
+    background-color: rgba(255, 123, 145, .4);
     color: white;
     border-radius: 5px;
 }
 
-.modal button:hover {
-    background-color: rgba(0, 0, 0, .2);
-}
-
 .confirm {
-    background-color: rgba(0, 0, 0, .7) !important;
+    background-color: rgba(255, 123, 145, .6) !important;
+    color: white;
 }

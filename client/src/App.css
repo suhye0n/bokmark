@@ -1,3 +1,18 @@
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    height: 30%;
+    background: rgb(255, 123, 145);
+
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 123, 145, .1);
+}
+
 #app {
     margin: 140px auto 70px auto;
     max-width: 950px;
@@ -18,7 +33,7 @@ button * {
 }
 
 button:hover {
-    color:rgb(255, 123, 145);
+    color: rgb(255, 123, 145);
     transition: all .2s ease-in-out;
 }
 
