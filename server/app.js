@@ -10,6 +10,7 @@ const mongoose = require('mongoose');
 const register = require('./routes/register');
 const login = require('./routes/login');
 const bookmark = require('./routes/bookmark');
+const withdraw = require('./routes/withdraw');
 
 mongoose.connect('mongodb://127.0.0.1:27017/mydb', {
     useNewUrlParser: true,
@@ -38,6 +39,7 @@ app.use(morgan('tiny'));
 app.use('/', register);
 app.use('/', login);
 app.use('/', bookmark);
+app.use('/', withdraw);
 
 const server = http.createServer(app);
 server.listen(app.get('port'), () => {
