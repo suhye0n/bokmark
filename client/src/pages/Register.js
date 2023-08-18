@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './UserForm.css';
 
-function Signup() {
+const Register = () => {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -36,16 +37,16 @@ function Signup() {
     }
 
     return (
-        <div>
-            <h1>회원가입</h1>
+        <div className='form'>
+            <h2>회원가입</h2>
             <form onSubmit={onSubmitHandler}>
-                <input type="text" id="name" onChange={onNameHandler} />
-                <input type="email" id="email" onChange={onEmailHandler} />
-                <input type="password" id="password" onChange={onPwHandler} />
+                <input type="text" id="name" onChange={onNameHandler} placeholder='닉네임' />
+                <input type="email" id="email" onChange={onEmailHandler} placeholder='이메일' />
+                <input type="password" id="password" onChange={onPwHandler} placeholder='비밀번호' />
                 <button type="submit">회원가입</button>
             </form>
         </div>
     );
 }
 
-export default Signup;
+export default Register;

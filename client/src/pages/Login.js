@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './UserForm.css';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -12,14 +13,17 @@ const Login = () => {
 
       if (response.data.userId) {
         localStorage.setItem('userId', response.data.userId);
+        alert('로그인이 완료되었습니다.');
+        window.location.href = '/';
       }
     } catch (error) {
       console.error(error.response.data.message);
+      alert(error.response.data.message);
     }
   };
 
   return (
-    <div>
+    <div className='form'>
       <h2>로그인</h2>
       <input
         type="email"

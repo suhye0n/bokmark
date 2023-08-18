@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './Main.css';
+import { TbBookmarkPlus, TbEditCircle, TbTrashX } from 'react-icons/tb';
 
 const Main = () => {
     const [url, setUrl] = useState('');
@@ -82,40 +84,51 @@ const Main = () => {
         fetchBookmarks();
     }, [userId]);
 
+    useEffect(() => {
+        let isLogin = !!localStorage.getItem('userId');
+        if (isLogin == false) {
+            window.location.href = '/login';
+        } else {
+        }
+    }, []);
+
     return (
         <div>
-            <h2>북마크 리스트</h2>
-            <button onClick={() => openModal('add')}>새로운 북마크 추가</button>
+            <button onClick={() => openModal('add')}><TbBookmarkPlus /></button>
 
             <ul>
                 {bookmarks.map((bookmark) => (
-                    <li key={bookmark._id}>
-                        <a href={bookmark.url} target="_blank" rel="noopener noreferrer">
+                    <li className='bookmark' key={bookmark._id}>
+                        <img className='favicon' src={bookmark.url + '/favicon.ico'} />
+                        <a href={bookmark.url} target='_blank' rel='noopener noreferrer'>
                             {bookmark.title}
                         </a>
-                        <button onClick={() => openModal('edit', bookmark._id)}>수정</button>
-                        <button onClick={() => handleDeleteClick(bookmark._id)}>삭제</button>
+                        <div className='btns'>
+                            <button onClick={() => openModal('edit', bookmark._id)}><TbEditCircle /></button>
+                            <button onClick={() => handleDeleteClick(bookmark._id)}><TbTrashX /></button>
+                        </div>
                     </li>
                 ))}
             </ul>
 
             {modalVisible && (
-                <div className="modal">
-                    <h2>{modalType === 'add' ? '새로운 북마크 추가' : '북마크 수정'}</h2>
-                    <input
-                        type="text"
-                        placeholder="URL 입력"
-                        value={url}
-                        onChange={(e) => setUrl(e.target.value)}
-                    />
-                    <input
-                        type="text"
-                        placeholder="제목 입력"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                    />
-                    <button onClick={handleSubmit}>{modalType === 'add' ? '추가' : '수정'}</button>
-                    <button onClick={closeModal}>취소</button>
+                <div className='background'>
+                    <div className='modal'>
+                        <input
+                            type="text"
+                            placeholder="URL 입력"
+                            value={url}
+                            onChange={(e) => setUrl(e.target.value)}
+                        />
+                        <input
+                            type="text"
+                            placeholder="제목 입력"
+                            value={title}
+                            onChange={(e) => setTitle(e.target.value)}
+                        />
+                        <button className='confirm' onClick={handleSubmit}>{modalType === 'add' ? '추가' : '수정'}</button>
+                        <button onClick={closeModal}>취소</button>
+                    </div>
                 </div>
             )}
         </div>

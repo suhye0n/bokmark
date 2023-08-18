@@ -1,0 +1,13 @@
+.form {
+    max-width: 550px;
+    margin: 70px auto;
+}
+
+.form button {
+    width: 90%;
+    margin: 5%;
+    padding: 20px 0;
+    background-color: rgb(255, 123, 145);
+    color: white;
+    border-radius: 5px;
+}

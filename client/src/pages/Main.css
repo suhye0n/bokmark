@@ -1,0 +1,63 @@
+.favicon {
+    height: 18px;
+    margin: 0 10px -2px 0;
+}
+
+.btns {
+    margin-left: 10px;
+    display: none;
+}
+
+.btns * {
+    margin-left: 3px;
+}
+
+.bookmark {
+    margin: 20px 0;
+    list-style: none;
+}
+
+.bookmark:hover {
+    .btns {
+        display: inline-block;
+    }
+}
+
+.background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, .8);
+}
+
+.modal {
+    z-index: 999;
+    position: absolute;
+    top: calc(50vh - 130px);
+    left: calc(50vw - 300px);
+    border-radius: 5px;
+    width: 600px;
+    height: 250px;
+    padding-top: 20px;
+    background-color: white;
+}
+
+.modal button {
+    width: 40%;
+    margin: 5%;
+    padding: 20px 0;
+    background-color: rgb(255, 123, 145);
+    color: white;
+    border-radius: 5px;
+}
+
+.modal button:hover {
+    opacity: .5;
+    color: black;
+}
+
+.confirm {
+    background-color: rgb(123, 147, 255) !important;
+}

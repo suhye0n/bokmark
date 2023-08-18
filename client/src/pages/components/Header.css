@@ -1,0 +1,24 @@
+#header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 0 50px;
+    background-color: #444;
+}
+
+#header * {
+    display: inline-block;
+    color: white;
+    font-size: 25px;
+}
+
+#header .menu {
+    float: right;
+    margin-right: 100px;
+}
+
+#header .menu * {
+    margin: 17px 0 14px 15px;
+    cursor: pointer;
+}
