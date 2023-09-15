@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TbBookmarkPlus, TbEditCircle, TbTrashX } from 'react-icons/tb';
+import { MdOutlineReportGmailerrorred } from 'react-icons/md';
 import { FaRegBookmark, FaBookmark } from 'react-icons/fa';
 import { getDocs, query, addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -177,10 +178,10 @@ const Main = () => {
         const user = localStorage.getItem('user');
         setIsLoggedIn(!!user);
         fetchBookmarks();
-        if(nickname == "수현") {
-          setShowPlus(true);
+        if (nickname == "수현") {
+            setShowPlus(true);
         } else {
-          setShowPlus(false);
+            setShowPlus(false);
         }
     }, []);
 
@@ -285,82 +286,102 @@ const Main = () => {
     return (
         <HomeContainer>
             <WriteButton className='add' onClick={() => openModal('add')}><TbBookmarkPlus /></WriteButton>
+            
+            { /* 수정: 이름순(ㄱ-ㅎ), 최신순, 인기순 */}
 
             <ContainerBox>
                 <Table>
                     <thead>
                         <tr>
+                            { /* 수정: 번호 표시 */}
                             <TableHeader>제목</TableHeader>
                             <TableHeader>카테고리</TableHeader>
                             <TableHeader>북마크 수</TableHeader>
                             <TableHeader>북마크</TableHeader>
+                            <TableHeader>신고</TableHeader>
                         </tr>
                     </thead>
                     <tbody>
                         {filterBookmarks(bookmarks, searchQuery, category).map((bookmark) => (
                             <>
-                            <TableRow key={bookmark.id}>
-                            {showPlus && bookmark.category == "🎮" && 
-                            <>
-                                <TableCell>
-                                    <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                        <Favicon src={bookmark.url + 'favicon.ico'} />
-                                        {bookmark.title}
-                                    </TitleLink>
-                                </TableCell>
-                                <TableCell>{bookmark.category}</TableCell>
-                                { /* 북마크 수 표시 */}
-                                <TableCell></TableCell>
-                                { /* 북마크하기 */}
-                                <TableCell>
-                                    <FaRegBookmark />
-                                    <FaBookmark />
-                                </TableCell>
-                                </>
-                            }
-                            </TableRow>
-                            <TableRow key={bookmark.id}>
-                            {showPlus && bookmark.category == "🔗" && 
-                            <>
-                                <TableCell>
-                                    <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                        <Favicon src={bookmark.url + 'favicon.ico'} />
-                                        {bookmark.title}
-                                    </TitleLink>
-                                </TableCell>
-                                <TableCell>{bookmark.category}</TableCell>
-                                { /* 북마크 수 표시 */}
-                                <TableCell></TableCell>
-                                { /* 북마크하기 */}
-                                <TableCell>
-                                    <FaRegBookmark />
-                                    <FaBookmark />
-                                </TableCell>
-                                </>
-                            }
-                            </TableRow>
-                            {bookmark.category !== "🎮" && bookmark.category !== "🔗" && 
-                            <>
                                 <TableRow key={bookmark.id}>
-                                    <TableCell>
-                                        <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                            <Favicon src={bookmark.url + 'favicon.ico'} />
-                                            {bookmark.title}
-                                        </TitleLink>
-                                    </TableCell>
-                                    <TableCell>{bookmark.category}</TableCell>
-                                { /* 북마크 수 표시 */}
-                                <TableCell></TableCell>
-                                { /* 북마크하기 */}
-                                <TableCell>
-                                    { /* 북마크했으면 이거 표시 */}
-                                    <FaBookmark />
-                                    { /* 북마크 안되어있으면 이거 표시 */}
-                                    <FaRegBookmark />
-                                </TableCell>
+                                    {showPlus && bookmark.category == "🎮" &&
+                                        <>
+                                            <TableCell>
+                                                <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
+                                                    <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
+                                                    {bookmark.title}
+                                                </TitleLink>
+                                            </TableCell>
+                                            <TableCell>{bookmark.category}</TableCell>
+                                            { /* 수정: 북마크 수 표시 */}
+                                            <TableCell></TableCell>
+                                            { /* 수정: 북마크하기 */}
+                                            <TableCell>
+                                                { /* 수정: 북마크했으면 이거 표시 */}
+                                                <FaBookmark />
+                                                { /* 수정: 북마크 안되어있으면 이거 표시 */}
+                                                <FaRegBookmark />
+                                            </TableCell>
+                                            { /* 수정: 신고하기 (누르면 firestore 신고수 +1, 신고 사유 입력) */}
+                                            <TableCell>
+                                                <MdOutlineReportGmailerrorred />
+                                            </TableCell>
+                                        </>
+                                    }
                                 </TableRow>
-                            </>
-                            }
+                                <TableRow key={bookmark.id}>
+                                    {showPlus && bookmark.category == "🔗" &&
+                                        <>
+                                            <TableCell>
+                                                <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
+                                                    <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
+                                                    {bookmark.title}
+                                                </TitleLink>
+                                            </TableCell>
+                                            <TableCell>{bookmark.category}</TableCell>
+                                            { /* 수정: 북마크 수 표시 */}
+                                            <TableCell></TableCell>
+                                            { /* 수정: 북마크하기 */}
+                                            <TableCell>
+                                                { /* 수정: 북마크했으면 이거 표시 */}
+                                                <FaBookmark />
+                                                { /* 수정: 북마크 안되어있으면 이거 표시 */}
+                                                <FaRegBookmark />
+                                            </TableCell>
+                                            { /* 수정: 신고하기 (누르면 firestore 신고수 +1) */}
+                                            <TableCell>
+                                                <MdOutlineReportGmailerrorred />
+                                            </TableCell>
+                                        </>
+                                    }
+                                </TableRow>
+                                {bookmark.category !== "🎮" && bookmark.category !== "🔗" &&
+                                    <>
+                                        <TableRow key={bookmark.id}>
+                                            <TableCell>
+                                                <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
+                                                    <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
+                                                    {bookmark.title}
+                                                </TitleLink>
+                                            </TableCell>
+                                            <TableCell>{bookmark.category}</TableCell>
+                                            { /* 수정: 북마크 수 표시 */}
+                                            <TableCell></TableCell>
+                                            { /* 수정: 북마크하기 */}
+                                            <TableCell>
+                                                { /* 수정: 북마크했으면 이거 표시 */}
+                                                <FaBookmark />
+                                                { /* 수정: 북마크 안되어있으면 이거 표시 */}
+                                                <FaRegBookmark />
+                                            </TableCell>
+                                            { /* 수정: 신고하기 (누르면 firestore 신고수 +1) */}
+                                            <TableCell>
+                                                <MdOutlineReportGmailerrorred />
+                                            </TableCell>
+                                        </TableRow>
+                                    </>
+                                }
                             </>
                         ))}
                     </tbody>
@@ -370,6 +391,7 @@ const Main = () => {
             {modalVisible && (
                 <Background>
                     <Modal>
+                        {/* 수정 이미 존재하는 url은 등록하지 못하도록.. */}
                         <form onSubmit={handleSubmit}>
                             <Input
                                 type="text"
@@ -391,14 +413,14 @@ const Main = () => {
                                 onChange={handleInputChange}
                             >
                                 <option value="" disabled>-- 카테고리 선택 --</option>
-                                { showPlus &&
-                                <>
-                                <option value="🔗">🔗</option>
-                                <option value="🛒">🛒</option>
-                                <option value="🗄️">🗄️</option>
-                                <option value="⌨️">⌨️</option>
-                                <option value="🎮">🎮</option>
-                                </>
+                                {showPlus &&
+                                    <>
+                                        <option value="🔗">🔗</option>
+                                        <option value="🛒">🛒</option>
+                                        <option value="🗄️">🗄️</option>
+                                        <option value="⌨️">⌨️</option>
+                                        <option value="🎮">🎮</option>
+                                    </>
                                 }
                                 <option value="게임">게임</option>
                                 <option value="개발자 도구">개발자 도구</option>

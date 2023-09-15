@@ -285,6 +285,8 @@ const Scrap = () => {
                         <tr>
                             <TableHeader>제목</TableHeader>
                             <TableHeader>라벨</TableHeader>
+                            <TableHeader>수정</TableHeader>
+                            <TableHeader>삭제</TableHeader>
                         </tr>
                     </thead>
                     <tbody>
@@ -300,6 +302,9 @@ const Scrap = () => {
                                     </TitleLink>
                                 </TableCell>
                                 <TableCell>{scrap.color}</TableCell>
+                                {/* 수정: 수정, 삭제 기능 */}
+                                <TableCell><Button>수정</Button></TableCell>
+                                <TableCell><Button>삭제</Button></TableCell>
                                 </>
                             }
                             </TableRow>
