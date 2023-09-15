@@ -1,10 +1,11 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 
+import Header from './components/Header';
+import Footer from './components/Footer';
 import Main from './components/Main';
 import Login from './components/Login';
 import Signup from './components/Signup';
-import Header from './components/Header';
 import Pocket from './components/Pocket';
 import Mypage from './components/Mypage';
 import Scrap from './components/Scrap';
@@ -25,6 +26,7 @@ function App() {
           <Route path="/mypage" element={<Mypage />} />
           <Route path="/scrap" element={<Scrap />} />
         </Routes>
+        <Footer />
       </div>
     </Router>
   );

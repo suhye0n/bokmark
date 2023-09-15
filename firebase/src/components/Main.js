@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TbBookmarkPlus, TbEditCircle, TbTrashX } from 'react-icons/tb';
+import { FaRegBookmark, FaBookmark } from 'react-icons/fa';
 import { getDocs, query, addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
@@ -291,6 +292,8 @@ const Main = () => {
                         <tr>
                             <TableHeader>제목</TableHeader>
                             <TableHeader>카테고리</TableHeader>
+                            <TableHeader>북마크 수</TableHeader>
+                            <TableHeader>북마크</TableHeader>
                         </tr>
                     </thead>
                     <tbody>
@@ -306,6 +309,13 @@ const Main = () => {
                                     </TitleLink>
                                 </TableCell>
                                 <TableCell>{bookmark.category}</TableCell>
+                                { /* 북마크 수 표시 */}
+                                <TableCell></TableCell>
+                                { /* 북마크하기 */}
+                                <TableCell>
+                                    <FaRegBookmark />
+                                    <FaBookmark />
+                                </TableCell>
                                 </>
                             }
                             </TableRow>
@@ -319,6 +329,13 @@ const Main = () => {
                                     </TitleLink>
                                 </TableCell>
                                 <TableCell>{bookmark.category}</TableCell>
+                                { /* 북마크 수 표시 */}
+                                <TableCell></TableCell>
+                                { /* 북마크하기 */}
+                                <TableCell>
+                                    <FaRegBookmark />
+                                    <FaBookmark />
+                                </TableCell>
                                 </>
                             }
                             </TableRow>
@@ -332,6 +349,15 @@ const Main = () => {
                                         </TitleLink>
                                     </TableCell>
                                     <TableCell>{bookmark.category}</TableCell>
+                                { /* 북마크 수 표시 */}
+                                <TableCell></TableCell>
+                                { /* 북마크하기 */}
+                                <TableCell>
+                                    { /* 북마크했으면 이거 표시 */}
+                                    <FaBookmark />
+                                    { /* 북마크 안되어있으면 이거 표시 */}
+                                    <FaRegBookmark />
+                                </TableCell>
                                 </TableRow>
                             </>
                             }
