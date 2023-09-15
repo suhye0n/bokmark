@@ -248,6 +248,7 @@ const Main = () => {
             } else {
                 await addDoc(collection(db, 'bookmarks'), newBookmarkData);
                 alert('북마크가 등록되었습니다.');
+                fetchBookmarks();
                 closeModal();
             }
 
@@ -300,7 +301,7 @@ const Main = () => {
                             <>
                                 <TableCell>
                                     <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                        <Favicon src={bookmark.url + '/favicon.ico'} />
+                                        <Favicon src={bookmark.url + 'favicon.ico'} />
                                         {bookmark.title}
                                     </TitleLink>
                                 </TableCell>
@@ -313,7 +314,7 @@ const Main = () => {
                             <>
                                 <TableCell>
                                     <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                        <Favicon src={bookmark.url + '/favicon.ico'} />
+                                        <Favicon src={bookmark.url + 'favicon.ico'} />
                                         {bookmark.title}
                                     </TitleLink>
                                 </TableCell>
@@ -326,7 +327,7 @@ const Main = () => {
                                 <TableRow key={bookmark.id}>
                                     <TableCell>
                                         <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                            <Favicon src={bookmark.url + '/favicon.ico'} />
+                                            <Favicon src={bookmark.url + 'favicon.ico'} />
                                             {bookmark.title}
                                         </TitleLink>
                                     </TableCell>

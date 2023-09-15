@@ -299,7 +299,8 @@ const Header = () => {
             <Sidebar show={showSidebar}>
                 <Category>
                     <Link to="/">홈</Link>
-                    <Link to="/">웹 서랍</Link>
+                    <Link to="/pocket">웹 서랍</Link>
+                    <Link to="/scrap">스크랩</Link>
                     { showPlus &&
                     <>
                     <Link to="/?category=🔗">🔗</Link>
