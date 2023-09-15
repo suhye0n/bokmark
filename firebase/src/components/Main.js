@@ -299,14 +299,6 @@ const Main = () => {
         }
     };
 
-    if (nickname === 'Anonymous') {
-        return (
-            <div>
-                <p>글을 쓰려면 로그인이 필요합니다.</p>
-            </div>
-        );
-    }
-
     const openModal = (type) => {
         setModalType(type);
         setModalVisible(true);

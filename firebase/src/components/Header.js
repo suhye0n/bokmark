@@ -44,7 +44,7 @@ const Sidebar = styled.div`
   top: 0;
   left: ${(props) => (props.show ? '0' : '-400px')};
   height: 100%;
-  width: 300px;
+  width: 230px;
   overflow: scroll;
   background-color: #ff7895;
   transition: all 0.4s;

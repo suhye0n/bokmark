@@ -34,7 +34,8 @@ const Input = styled.input`
   font-size: 1rem;
   border: 1px solid #eee;
   border-radius: 5px;
-  width: 300px;
+  width: 80%;
+  max-width: 300px;
 `;
 
 const Button = styled.button`

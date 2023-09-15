@@ -39,7 +39,8 @@ const Title = styled.h1`
 const Input = styled.input`
   padding: 14px;
   margin: 8px 0;
-  width: 300px;
+  width: 80%;
+  max-width: 300px;
   border: 1px solid #eee;
   border-radius: 5px;
 `;
