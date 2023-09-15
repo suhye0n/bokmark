@@ -287,13 +287,13 @@ const Main = () => {
         <HomeContainer>
             <WriteButton className='add' onClick={() => openModal('add')}><TbBookmarkPlus /></WriteButton>
             
-            { /* 수정: 이름순(ㄱ-ㅎ), 최신순, 인기순 */}
+            { /* 수정: 이름순, 최신순, 인기순 */}
 
             <ContainerBox>
                 <Table>
                     <thead>
                         <tr>
-                            { /* 수정: 번호 표시 */}
+                            <TableHeader>번호</TableHeader>
                             <TableHeader>제목</TableHeader>
                             <TableHeader>카테고리</TableHeader>
                             <TableHeader>북마크 수</TableHeader>
@@ -302,11 +302,12 @@ const Main = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filterBookmarks(bookmarks, searchQuery, category).map((bookmark) => (
+                        {filterBookmarks(bookmarks, searchQuery, category).map((bookmark, index) => (
                             <>
                                 <TableRow key={bookmark.id}>
                                     {showPlus && bookmark.category == "🎮" &&
                                         <>
+                                            <TableCell>{index + 1}</TableCell>
                                             <TableCell>
                                                 <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
                                                     <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
@@ -333,6 +334,7 @@ const Main = () => {
                                 <TableRow key={bookmark.id}>
                                     {showPlus && bookmark.category == "🔗" &&
                                         <>
+                                            <TableCell>{index + 1}</TableCell>
                                             <TableCell>
                                                 <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
                                                     <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
@@ -359,6 +361,7 @@ const Main = () => {
                                 {bookmark.category !== "🎮" && bookmark.category !== "🔗" &&
                                     <>
                                         <TableRow key={bookmark.id}>
+                                            <TableCell>{index + 1}</TableCell>
                                             <TableCell>
                                                 <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
                                                     <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
