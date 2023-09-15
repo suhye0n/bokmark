@@ -122,7 +122,7 @@ const Select = styled.select`
 
 const Button = styled.button`
     padding: 13px 25px;
-    margin: 10px;
+    margin-right: 10px;
     font-size: 1rem;
     background-color: #ff7895;
     color: white;
@@ -244,11 +244,11 @@ const Main = () => {
                     updatedAt: new Date()
                 });
                 alert('북마크가 수정되었습니다.');
-                navigate('/');
+                closeModal();
             } else {
                 await addDoc(collection(db, 'bookmarks'), newBookmarkData);
                 alert('북마크가 등록되었습니다.');
-                navigate('/');
+                closeModal();
             }
 
             setFormData({
