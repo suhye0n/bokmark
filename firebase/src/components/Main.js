@@ -2,12 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { TbBookmarkPlus, TbEditCircle, TbTrashX } from 'react-icons/tb';
 import { MdOutlineReportGmailerrorred } from 'react-icons/md';
 import { FaRegBookmark, FaBookmark } from 'react-icons/fa';
-import { getDocs, query, addDoc, collection, doc, getDoc, updateDoc, setDoc, deleteDoc, FieldValue } from 'firebase/firestore';
-
+import { getDocs, query, addDoc, collection, doc, getDoc, setDoc, updateDoc, FieldValue, deleteField } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import firebase from 'firebase/app';
+
 const Favicon = styled.img`
     height: 18px;
     margin: 0 10px -2px 0;
@@ -138,6 +137,16 @@ const Button = styled.button`
     }
 `;
 
+const DrawerBtn = styled.button`
+background-color: transparent;
+border: none;
+transition: 0.4s;
+cursor: pointer;
+&:hover {
+    opacity: 0.7;
+}
+`;
+
 const Main = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -158,6 +167,37 @@ const Main = () => {
         category: '',
     });
 
+    useEffect(() => {
+        const savedWebDrawer = localStorage.getItem("webDrawer");
+        if (savedWebDrawer) {
+            setUserBookmarks(JSON.parse(savedWebDrawer));
+        }
+        const user = localStorage.getItem('user');
+        setIsLoggedIn(!!user);
+        if (nickname == "수현") {
+            setShowPlus(true);
+        } else {
+            setShowPlus(false);
+        }
+        const fetchWebDrawer = async () => {
+            try {
+                const userDrawerDocRef = doc(db, 'webDrawer', nickname);
+                const userDrawerSnap = await getDoc(userDrawerDocRef);
+
+                if (userDrawerSnap.exists()) {
+                    const drawerData = userDrawerSnap.data();
+                    const drawerKeys = Object.keys(drawerData).filter(key => drawerData[key] === true);
+                    setUserBookmarks(drawerKeys);
+                }
+            } catch (error) {
+                console.error("Error fetching web drawer: ", error);
+            }
+        };
+
+        fetchWebDrawer();
+        fetchBookmarks();
+    }, []);
+
     const fetchBookmarks = async () => {
         try {
             const bookmarksData = await getDocs(query(collection(db, 'bookmarks')));
@@ -175,17 +215,6 @@ const Main = () => {
             console.error(error);
         }
     };
-
-    useEffect(() => {
-        const user = localStorage.getItem('user');
-        setIsLoggedIn(!!user);
-        fetchBookmarks();
-        if (nickname == "수현") {
-            setShowPlus(true);
-        } else {
-            setShowPlus(false);
-        }
-    }, []);
 
     const searchQuery = new URLSearchParams(location.search).get('search') || '';
     const category = new URLSearchParams(location.search).get('category') || '';
@@ -286,38 +315,59 @@ const Main = () => {
     };
 
     const addToWebDrawer = async (bookmarkId) => {
-      try {
-        const userDrawerDocRef = doc(db, 'webDrawer', nickname);
-        await setDoc(userDrawerDocRef, {
-          [bookmarkId]: true,
-        }, { merge: true });
-  
-        setUserBookmarks([...userBookmarks, bookmarkId]);
-      } catch (error) {
-        console.error("Error adding bookmark: ", error);
-      }
+        try {
+            const userDrawerDocRef = doc(db, 'webDrawer', nickname);
+            await setDoc(userDrawerDocRef, {
+                [bookmarkId]: true,
+            }, { merge: true });
+
+            const bookmarkDocRef = doc(db, 'bookmarks', bookmarkId);
+            const snap = await getDoc(bookmarkDocRef);
+            if (snap.exists()) {
+                const currentCount = snap.data().webDrawerCount || 0;
+                await updateDoc(bookmarkDocRef, {
+                    webDrawerCount: currentCount + 1
+                });
+            }
+
+            setUserBookmarks([...userBookmarks, bookmarkId]);
+            localStorage.setItem("webDrawer", JSON.stringify([...userBookmarks, bookmarkId]));
+            fetchBookmarks();
+        } catch (error) {
+            console.error(error);
+        }
     };
 
     const removeFromWebDrawer = async (bookmarkId) => {
         try {
             const userDrawerDocRef = doc(db, 'webDrawer', nickname);
             const bookmarkField = `${bookmarkId}`;
+
             await updateDoc(userDrawerDocRef, {
-                [bookmarkField]: FieldValue.delete()
+                [bookmarkField]: deleteField()
             });
-    
+
+            const bookmarkDocRef = doc(db, 'bookmarks', bookmarkId);
+            const snap = await getDoc(bookmarkDocRef);
+            if (snap.exists()) {
+                const currentCount = snap.data().webDrawerCount || 0;
+                await updateDoc(bookmarkDocRef, {
+                    webDrawerCount: currentCount - 1
+                });
+            }
+
             const updatedBookmarks = userBookmarks.filter(id => id !== bookmarkId);
             setUserBookmarks(updatedBookmarks);
+            fetchBookmarks();
         } catch (error) {
-            console.error("Error removing bookmark: ", error);
+            console.error(error);
         }
     };
-    
 
     return (
         <HomeContainer>
             <WriteButton className='add' onClick={() => openModal('add')}><TbBookmarkPlus /></WriteButton>
-            
+
             { /* 수정: 이름순, 최신순, 인기순 */}
 
             <ContainerBox>
@@ -338,75 +388,75 @@ const Main = () => {
                                 <TableRow key={bookmark.id}>
                                     {showPlus && bookmark.category == "🎮" &&
                                         <>
-                                        <TableCell>{index + 1}</TableCell>
-                                        <TableCell>
-                                            <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                                <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
-                                                {bookmark.title}
-                                            </TitleLink>
-                                        </TableCell>
-                                        <TableCell>{bookmark.category}</TableCell>
-                                        <TableCell>{ /* 웹서랍 수 표시 */ }</TableCell>
-          <TableCell>
-            {userBookmarks.includes(bookmark.id) ? (
-              <FaBookmark onClick={() => removeFromWebDrawer(bookmark.id)} />
-            ) : (
-              <FaRegBookmark onClick={() => addToWebDrawer(bookmark.id)} />
-            )}
-          </TableCell>
-                                        <TableCell>
-                                            <MdOutlineReportGmailerrorred />
-                                        </TableCell>
+                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell>
+                                                <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
+                                                    <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
+                                                    {bookmark.title}
+                                                </TitleLink>
+                                            </TableCell>
+                                            <TableCell>{bookmark.category}</TableCell>
+                                            <TableCell>{bookmark.webDrawerCount || 0}</TableCell>
+                                            <TableCell>
+                                                {userBookmarks.includes(bookmark.id) ? (
+                                                    <DrawerBtn onClick={() => removeFromWebDrawer(bookmark.id)}><FaBookmark /></DrawerBtn>
+                                                ) : (
+                                                    <DrawerBtn onClick={() => addToWebDrawer(bookmark.id)}><FaRegBookmark /></DrawerBtn>
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                <MdOutlineReportGmailerrorred />
+                                            </TableCell>
                                         </>
                                     }
                                 </TableRow>
                                 <TableRow key={bookmark.id}>
                                     {showPlus && bookmark.category == "🔗" &&
                                         <>
-                                        <TableCell>{index + 1}</TableCell>
-                                        <TableCell>
-                                            <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                                <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
-                                                {bookmark.title}
-                                            </TitleLink>
-                                        </TableCell>
-                                        <TableCell>{bookmark.category}</TableCell>
-                                        <TableCell>{ /* 웹서랍 수 표시 */ }</TableCell>
-          <TableCell>
-            {userBookmarks.includes(bookmark.id) ? (
-              <FaBookmark onClick={() => removeFromWebDrawer(bookmark.id)} />
-            ) : (
-              <FaRegBookmark onClick={() => addToWebDrawer(bookmark.id)} />
-            )}
-          </TableCell>
-                                        <TableCell>
-                                            <MdOutlineReportGmailerrorred />
-                                        </TableCell>
+                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell>
+                                                <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
+                                                    <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
+                                                    {bookmark.title}
+                                                </TitleLink>
+                                            </TableCell>
+                                            <TableCell>{bookmark.category}</TableCell>
+                                            <TableCell>{bookmark.webDrawerCount || 0}</TableCell>
+                                            <TableCell>
+                                                {userBookmarks.includes(bookmark.id) ? (
+                                                    <DrawerBtn onClick={() => removeFromWebDrawer(bookmark.id)}><FaBookmark /></DrawerBtn>
+                                                ) : (
+                                                    <DrawerBtn onClick={() => addToWebDrawer(bookmark.id)}><FaRegBookmark /></DrawerBtn>
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                <MdOutlineReportGmailerrorred />
+                                            </TableCell>
                                         </>
                                     }
                                 </TableRow>
                                 {bookmark.category !== "🎮" && bookmark.category !== "🔗" &&
                                     <>
                                         <TableRow key={bookmark.id}>
-                                        <TableCell>{index + 1}</TableCell>
-                                        <TableCell>
-                                            <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                                <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
-                                                {bookmark.title}
-                                            </TitleLink>
-                                        </TableCell>
-                                        <TableCell>{bookmark.category}</TableCell>
-                                        <TableCell>{ /* 웹서랍 수 표시 */ }</TableCell>
-          <TableCell>
-            {userBookmarks.includes(bookmark.id) ? (
-              <FaBookmark onClick={() => removeFromWebDrawer(bookmark.id)} />
-            ) : (
-              <FaRegBookmark onClick={() => addToWebDrawer(bookmark.id)} />
-            )}
-          </TableCell>
-                                        <TableCell>
-                                            <MdOutlineReportGmailerrorred />
-                                        </TableCell>
+                                            <TableCell>{index + 1}</TableCell>
+                                            <TableCell>
+                                                <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
+                                                    <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
+                                                    {bookmark.title}
+                                                </TitleLink>
+                                            </TableCell>
+                                            <TableCell>{bookmark.category}</TableCell>
+                                            <TableCell>{bookmark.webDrawerCount || 0}</TableCell>
+                                            <TableCell>
+                                                {userBookmarks.includes(bookmark.id) ? (
+                                                    <DrawerBtn onClick={() => removeFromWebDrawer(bookmark.id)}><FaBookmark /></DrawerBtn>
+                                                ) : (
+                                                    <DrawerBtn onClick={() => addToWebDrawer(bookmark.id)}><FaRegBookmark /></DrawerBtn>
+                                                )}
+                                            </TableCell>
+                                            <TableCell>
+                                                <MdOutlineReportGmailerrorred />
+                                            </TableCell>
                                         </TableRow>
                                     </>
                                 }

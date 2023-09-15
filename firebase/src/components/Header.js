@@ -289,6 +289,7 @@ const Header = () => {
 
     const handleLogout = () => {
         localStorage.removeItem('user');
+        localStorage.removeItem("webDrawer");
         setIsLoggedIn(false);
         alert('로그아웃이 완료되었습니다.');
     };
