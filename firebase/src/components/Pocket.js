@@ -23,6 +23,16 @@ const Title = styled.h1`
     font-size: 2.5rem;
     margin-bottom: 1rem;
     color: #ff7895;
+    text-align: center;
+`;
+
+const LoginBox = styled.div`
+    padding: 70px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px 1px #FF7895;
+    background-color: #fff;
+    margin-bottom: 20px;
 `;
 
 const ContainerBox = styled.div`
@@ -31,6 +41,7 @@ const ContainerBox = styled.div`
     box-shadow: 1px 1px 1px 1px #FF7895;
     background-color: #fff;
     margin-bottom: 20px;
+    overflow-x: scroll;
 `;
 
 const Table = styled.table`
@@ -171,6 +182,14 @@ const Pocket = () => {
         }
     }, [id, nickname]);
 
+    if (nickname === 'Anonymous') {
+        return (
+            <Container>
+                <LoginBox>북마크를 열람하려면 로그인이 필요합니다.</LoginBox>
+            </Container>
+        );
+    }
+
     const addToWebDrawer = async (bookmarkId) => {
         try {
             const userDrawerDocRef = doc(db, 'webDrawer', nickname);
@@ -223,8 +242,8 @@ const Pocket = () => {
 
     return (
         <Container>
-            <Title>웹 서랍</Title>
             <ContainerBox>
+            <Title>웹 서랍</Title>
                 <Table>
                     <thead>
                         <tr>

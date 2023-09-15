@@ -36,6 +36,7 @@ const ContainerBox = styled.div`
     box-shadow: 1px 1px 1px 1px #FF7895;
     background-color: #fff;
     margin-bottom: 20px;
+    overflow-x: scroll;
 `;
 
 const Background = styled.div`
