@@ -311,7 +311,7 @@ const Main = () => {
     if (nickname === 'Anonymous') {
         return (
             <HomeContainer>
-                <LoginBox>글을 쓰려면 로그인이 필요합니다.</LoginBox>
+                <LoginBox>북마크를 열람하려면 로그인이 필요합니다.</LoginBox>
             </HomeContainer>
         );
     }
