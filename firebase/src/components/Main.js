@@ -21,6 +21,15 @@ const HomeContainer = styled.div`
     position: relative;
 `;
 
+const LoginBox = styled.div`
+    padding: 70px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px 1px #FF7895;
+    background-color: #fff;
+    margin-bottom: 20px;
+`;
+
 const ContainerBox = styled.div`
     padding: 20px;
     border-radius: 10px;
@@ -298,6 +307,14 @@ const Main = () => {
             console.error(error);
         }
     };
+
+    if (nickname === 'Anonymous') {
+        return (
+            <HomeContainer>
+                <LoginBox>글을 쓰려면 로그인이 필요합니다.</LoginBox>
+            </HomeContainer>
+        );
+    }
 
     const openModal = (type) => {
         setModalType(type);
