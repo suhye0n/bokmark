@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TbBookmarkPlus, TbEditCircle, TbTrashX } from 'react-icons/tb';
-import { getDocs, query, addDoc, collection, doc, getDoc, updateDoc } from 'firebase/firestore';
+import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { getDocs, query, addDoc, collection, doc, getDoc, deleteDoc, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -17,6 +18,22 @@ const HomeContainer = styled.div`
     margin-top: -150px;
     z-index: 10;
     position: relative;
+`;
+
+const Title = styled.h1`
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #ff7895;
+    text-align: center;
+`;
+
+const LoginBox = styled.div`
+    padding: 70px;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 1px 1px 1px 1px #FF7895;
+    background-color: #fff;
+    margin-bottom: 20px;
 `;
 
 const ContainerBox = styled.div`
@@ -120,6 +137,12 @@ const Select = styled.select`
   border-radius: 5px;
 `;
 
+const EditButton = styled.button`
+    border: 0;
+    cursor: pointer;
+    background-color: transparent;
+`;
+
 const Button = styled.button`
     padding: 13px 25px;
     margin-right: 10px;
@@ -145,6 +168,7 @@ const Scrap = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [scraps, setScraps] = useState([]);
+    const [currentScrapId, setCurrentScrapId] = useState(null);
 
     const [formData, setFormData] = useState({
         user: nickname,
@@ -186,6 +210,16 @@ const Scrap = () => {
         );
     };
 
+    const handleDelete = async (id) => {
+        try {
+            await deleteDoc(doc(db, 'scraps', id));
+            alert('스크랩이 삭제되었습니다.');
+            fetchScraps();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     useEffect(() => {
         if (id) {
             const fetchScrap = async () => {
@@ -218,40 +252,42 @@ const Scrap = () => {
         });
     };
 
+    const newScrapData = {
+        user: nickname,
+        url: formData.url,
+        title: formData.title,
+        color: formData.color,
+        createdAt: new Date(),
+        updatedAt: new Date()
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         try {
-            const newScrapData = {
-                user: nickname,
-                url: formData.url,
-                title: formData.title,
-                color: formData.color,
-                createdAt: new Date(),
-                updatedAt: new Date()
-            };
+            if (modalType === 'add') {
 
-            if (id) {
-                const scrapDocRef = doc(db, 'scraps', id);
+                await addDoc(collection(db, 'scraps'), newScrapData);
+                alert('스크랩이 등록되었습니다.');
+                fetchScraps();
+                closeModal();
+
+                setFormData({
+                    user: nickname,
+                    url: '',
+                    title: '',
+                    color: '',
+                });
+            } else if (modalType === 'edit' && currentScrapId) {
+                const scrapDocRef = doc(db, 'scraps', currentScrapId);
                 await updateDoc(scrapDocRef, {
                     ...newScrapData,
                     updatedAt: new Date()
                 });
                 alert('스크랩이 수정되었습니다.');
                 closeModal();
-            } else {
-                await addDoc(collection(db, 'scraps'), newScrapData);
-                alert('스크랩이 등록되었습니다.');
                 fetchScraps();
-                closeModal();
             }
-
-            setFormData({
-                user: nickname,
-                url: '',
-                title: '',
-                color: '',
-            });
         } catch (error) {
             console.error(error);
         }
@@ -259,20 +295,40 @@ const Scrap = () => {
 
     if (nickname === 'Anonymous') {
         return (
-            <div>
-                <p>스크랩 하려면 로그인이 필요합니다.</p>
-            </div>
+            <HomeContainer>
+                <LoginBox>북마크를 열람하려면 로그인이 필요합니다.</LoginBox>
+            </HomeContainer>
         );
     }
 
-    const openModal = (type) => {
+    const openModal = (type, scrapId = null) => {
+        setCurrentScrapId(scrapId);
+        if (type === 'edit' && scrapId) {
+            const scrap = scraps.find(s => s.id === scrapId);
+            if (scrap) {
+                setFormData({
+                    user: nickname,
+                    url: scrap.url,
+                    title: scrap.title,
+                    color: scrap.color
+                });
+            }
+        }
         setModalType(type);
         setModalVisible(true);
     };
 
     const closeModal = () => {
+        setCurrentScrapId(null);
         setModalVisible(false);
         setModalType(null);
+
+        setFormData({
+            user: nickname,
+            url: '',
+            title: '',
+            color: '',
+        });
     };
 
     return (
@@ -280,6 +336,7 @@ const Scrap = () => {
             <WriteButton className='add' onClick={() => openModal('add')}><TbBookmarkPlus /></WriteButton>
 
             <ContainerBox>
+                <Title>스크랩</Title>
                 <Table>
                     <thead>
                         <tr>
@@ -291,24 +348,29 @@ const Scrap = () => {
                     </thead>
                     <tbody>
                         {filterScraps(scraps, searchQuery).map((scrap) => (
-                            <>
                             <TableRow key={scrap.id}>
-                            {scrap.user == nickname && 
-                            <>
-                                <TableCell>
-                                    <TitleLink target="_blank" rel="noopener noreferrer" to={`${scrap.url}`}>
-                                        <Favicon src={scrap.url + '/favicon.ico'} />
-                                        {scrap.title}
-                                    </TitleLink>
-                                </TableCell>
-                                <TableCell>{scrap.color}</TableCell>
-                                {/* 수정: 수정, 삭제 기능 */}
-                                <TableCell><Button>수정</Button></TableCell>
-                                <TableCell><Button>삭제</Button></TableCell>
-                                </>
-                            }
+                                {scrap.user === nickname && (
+                                    <>
+                                        <TableCell>
+                                            <TitleLink target="_blank" rel="noopener noreferrer" to={`${scrap.url}`}>
+                                                <Favicon src={scrap.url + '/favicon.ico'} />
+                                                {scrap.title}
+                                            </TitleLink>
+                                        </TableCell>
+                                        <TableCell>{scrap.color}</TableCell>
+                                        <TableCell>
+                                            <EditButton onClick={() => openModal('edit', scrap.id)}>
+                                                <FaEdit />
+                                            </EditButton>
+                                        </TableCell>
+                                        <TableCell>
+                                            <EditButton onClick={() => handleDelete(scrap.id)}>
+                                                <FaTrashAlt />
+                                            </EditButton>
+                                        </TableCell>
+                                    </>
+                                )}
                             </TableRow>
-                            </>
                         ))}
                     </tbody>
                 </Table>
@@ -343,7 +405,7 @@ const Scrap = () => {
                                 <option value="yellow">노란색</option>
                                 <option value="green">초록색</option>
                             </Select>
-                            <Button type="submit">완료</Button>
+                            <Button type="submit">{modalType === 'add' ? '추가' : '수정'}</Button>
                             <Button onClick={closeModal}>취소</Button>
                         </form>
                     </Modal>
