@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { TbBookmarkPlus, TbEditCircle, TbTrashX } from 'react-icons/tb';
-import { MdOutlineReportGmailerrorred } from 'react-icons/md';
 import { FaRegBookmark, FaBookmark } from 'react-icons/fa';
 import { getDocs, query, addDoc, collection, doc, getDoc, setDoc, updateDoc, FieldValue, deleteField } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -373,8 +371,6 @@ const Pocket = () => {
     return (
         <Container>
             <Title>웹 서랍</Title>
-            <WriteButton className='add' onClick={() => openModal('add')}><TbBookmarkPlus /></WriteButton>
-
             <ContainerBox>
                 <Table>
                     <thead>
@@ -411,73 +407,6 @@ const Pocket = () => {
                     </tbody>
                 </Table>
             </ContainerBox>
-
-            {modalVisible && (
-                <Background>
-                    <Modal>
-                        {/* 수정 이미 존재하는 url은 등록하지 못하도록.. */}
-                        <form onSubmit={handleSubmit}>
-                            <Input
-                                type="text"
-                                name="url"
-                                placeholder="링크"
-                                value={formData.url}
-                                onChange={handleInputChange}
-                            />
-                            <Input
-                                type="text"
-                                name="title"
-                                placeholder="제목"
-                                value={formData.title}
-                                onChange={handleInputChange}
-                            />
-                            <Select
-                                name="category"
-                                value={formData.category}
-                                onChange={handleInputChange}
-                            >
-                                <option value="" disabled>-- 카테고리 선택 --</option>
-                                {showPlus &&
-                                    <>
-                                        <option value="🔗">🔗</option>
-                                        <option value="🛒">🛒</option>
-                                        <option value="🗄️">🗄️</option>
-                                        <option value="⌨️">⌨️</option>
-                                        <option value="🎮">🎮</option>
-                                    </>
-                                }
-                                <option value="게임">게임</option>
-                                <option value="개발자 도구">개발자 도구</option>
-                                <option value="건강 및 피트니스">건강 및 피트니스</option>
-                                <option value="교육">교육</option>
-                                <option value="그래픽 및 디자인">그래픽 및 디자인</option>
-                                <option value="금융">금융</option>
-                                <option value="날씨">날씨</option>
-                                <option value="지도">지도</option>
-                                <option value="뉴스">뉴스</option>
-                                <option value="도서">도서</option>
-                                <option value="라이프 스타일">라이프 스타일</option>
-                                <option value="비즈니스">비즈니스</option>
-                                <option value="사진 및 비디오">사진 및 비디오</option>
-                                <option value="생산성">생산성</option>
-                                <option value="쇼핑">쇼핑</option>
-                                <option value="소셜 네트워킹">소셜 네트워킹</option>
-                                <option value="스포츠">스포츠</option>
-                                <option value="어린이">어린이</option>
-                                <option value="엔터테인먼트">엔터테인먼트</option>
-                                <option value="여행">여행</option>
-                                <option value="유틸리티">유틸리티</option>
-                                <option value="음식 및 음료">음식 및 음료</option>
-                                <option value="음악">음악</option>
-                                <option value="의료">의료</option>
-                                <option value="잡지 및 신문">잡지 및 신문</option>
-                            </Select>
-                            <Button type="submit">완료</Button>
-                            <Button onClick={closeModal}>취소</Button>
-                        </form>
-                    </Modal>
-                </Background>
-            )}
         </Container>
     );
 };
