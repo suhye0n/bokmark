@@ -45,6 +45,7 @@ const Sidebar = styled.div`
   left: ${(props) => (props.show ? '0' : '-400px')};
   height: 100%;
   width: 300px;
+  overflow: scroll;
   background-color: #ff7895;
   transition: all 0.4s;
   z-index: 999;
@@ -301,41 +302,41 @@ const Header = () => {
                     <Link to="/">웹 서랍</Link>
                     { showPlus &&
                     <>
-                    <Link to="/">🔗</Link>
-                    <Link to="/">🛒</Link>
-                    <Link to="/">🗄️</Link>
-                    <Link to="/">⌨️</Link>
-                    <Link to="/">🎮</Link>
+                    <Link to="/?category=🔗">🔗</Link>
+                    <Link to="/?category=🛒">🛒</Link>
+                    <Link to="/?category=🗄️">🗄️</Link>
+                    <Link to="/?category=⌨️">⌨️</Link>
+                    <Link to="/?category=🎮">🎮</Link>
                     </>
                     }
-                    <Link to="/">무료 웹 순위</Link>
-                    <Link to="/">유료 웹 순위</Link>
-                    <Link to="/">요즘 뜨는 웹</Link>
-                    <Link to="/">게임</Link>
-                    <Link to="/">개발자 도구</Link>
-                    <Link to="/">건강 및 피트니스</Link>
-                    <Link to="/">교육</Link>
-                    <Link to="/">그래픽 및 디자인</Link>
-                    <Link to="/">금융</Link>
-                    <Link to="/">날씨</Link>
-                    <Link to="/">지도</Link>
-                    <Link to="/">뉴스</Link>
-                    <Link to="/">도서</Link>
-                    <Link to="/">라이프 스타일</Link>
-                    <Link to="/">비즈니스</Link>
-                    <Link to="/">사진 및 비디오</Link>
-                    <Link to="/">생산성</Link>
-                    <Link to="/">소셜 네트워킹</Link>
-                    <Link to="/">쇼핑</Link>
-                    <Link to="/">스포츠</Link>
-                    <Link to="/">어린이</Link>
-                    <Link to="/">엔터테인먼트</Link>
-                    <Link to="/">여행</Link>
-                    <Link to="/">유틸리티</Link>
-                    <Link to="/">음식 및 음료</Link>
-                    <Link to="/">음악</Link>
-                    <Link to="/">의료</Link>
-                    <Link to="/">잡지 및 신문</Link>
+                    <Link to="/?category=">무료 웹 순위</Link>
+                    <Link to="/?category=">유료 웹 순위</Link>
+                    <Link to="/?category=">요즘 뜨는 웹</Link>
+                    <Link to="/?category=게임">게임</Link>
+                    <Link to="/?category=개발자 도구">개발자 도구</Link>
+                    <Link to="/?category=건강 및 피트니스">건강 및 피트니스</Link>
+                    <Link to="/?category=교육">교육</Link>
+                    <Link to="/?category=그래픽 및 디자인">그래픽 및 디자인</Link>
+                    <Link to="/?category=금융">금융</Link>
+                    <Link to="/?category=날씨">날씨</Link>
+                    <Link to="/?category=지도">지도</Link>
+                    <Link to="/?category=뉴스">뉴스</Link>
+                    <Link to="/?category=도서">도서</Link>
+                    <Link to="/?category=라이프 스타일">라이프 스타일</Link>
+                    <Link to="/?category=비즈니스">비즈니스</Link>
+                    <Link to="/?category=사진 및 비디오">사진 및 비디오</Link>
+                    <Link to="/?category=생산성">생산성</Link>
+                    <Link to="/?category=쇼핑">쇼핑</Link>
+                    <Link to="/?category=소셜 네트워킹">소셜 네트워킹</Link>
+                    <Link to="/?category=스포츠">스포츠</Link>
+                    <Link to="/?category=어린이">어린이</Link>
+                    <Link to="/?category=엔터테인먼트">엔터테인먼트</Link>
+                    <Link to="/?category=여행">여행</Link>
+                    <Link to="/?category=유틸리티">유틸리티</Link>
+                    <Link to="/?category=음식 및 음료">음식 및 음료</Link>
+                    <Link to="/?category=음악">음악</Link>
+                    <Link to="/?category=의료">의료</Link>
+                    <Link to="/?category=잡지 및 신문">잡지 및 신문</Link>
                 </Category>
                 <CloseIcon onClick={toggleSidebar} />
             </Sidebar>

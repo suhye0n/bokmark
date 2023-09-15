@@ -145,11 +145,11 @@ const Main = () => {
     const [modalVisible, setModalVisible] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [bookmarks, setBookmarks] = useState([]);
+    const [showPlus, setShowPlus] = useState(false);
 
     const [formData, setFormData] = useState({
         user: nickname,
         url: '',
-        color: '',
         title: '',
         category: '',
     });
@@ -176,6 +176,11 @@ const Main = () => {
         const user = localStorage.getItem('user');
         setIsLoggedIn(!!user);
         fetchBookmarks();
+        if(nickname == "수현") {
+          setShowPlus(true);
+        } else {
+          setShowPlus(false);
+        }
     }, []);
 
     const searchQuery = new URLSearchParams(location.search).get('search') || '';
@@ -197,7 +202,6 @@ const Main = () => {
                         setFormData({
                             user: nickname,
                             url: bookmarkData.url || '',
-                            color: bookmarkData.color || '',
                             title: bookmarkData.title || '',
                             category: bookmarkData.category || '',
                         });
@@ -229,7 +233,6 @@ const Main = () => {
                 url: formData.url,
                 title: formData.title,
                 category: formData.category,
-                color: formData.color,
                 createdAt: new Date(),
                 updatedAt: new Date()
             };
@@ -253,7 +256,6 @@ const Main = () => {
                 url: '',
                 title: '',
                 category: '',
-                color: '',
             });
         } catch (error) {
             console.error(error);
@@ -287,20 +289,52 @@ const Main = () => {
                     <thead>
                         <tr>
                             <TableHeader>제목</TableHeader>
-                            <TableHeader>작성자</TableHeader>
+                            <TableHeader>카테고리</TableHeader>
                         </tr>
                     </thead>
                     <tbody>
                         {filterBookmarks(bookmarks, searchQuery, category).map((bookmark) => (
+                            <>
                             <TableRow key={bookmark.id}>
+                            {showPlus && bookmark.category == "🎮" && 
+                            <>
                                 <TableCell>
                                     <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
                                         <Favicon src={bookmark.url + '/favicon.ico'} />
                                         {bookmark.title}
                                     </TitleLink>
                                 </TableCell>
-                                <TableCell>{bookmark.user}</TableCell>
+                                <TableCell>{bookmark.category}</TableCell>
+                                </>
+                            }
                             </TableRow>
+                            <TableRow key={bookmark.id}>
+                            {showPlus && bookmark.category == "🔗" && 
+                            <>
+                                <TableCell>
+                                    <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
+                                        <Favicon src={bookmark.url + '/favicon.ico'} />
+                                        {bookmark.title}
+                                    </TitleLink>
+                                </TableCell>
+                                <TableCell>{bookmark.category}</TableCell>
+                                </>
+                            }
+                            </TableRow>
+                            {bookmark.category !== "🎮" && bookmark.category !== "🔗" && 
+                            <>
+                                <TableRow key={bookmark.id}>
+                                    <TableCell>
+                                        <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
+                                            <Favicon src={bookmark.url + '/favicon.ico'} />
+                                            {bookmark.title}
+                                        </TitleLink>
+                                    </TableCell>
+                                    <TableCell>{bookmark.category}</TableCell>
+                                </TableRow>
+                            </>
+                            }
+                            </>
                         ))}
                     </tbody>
                 </Table>
@@ -325,27 +359,45 @@ const Main = () => {
                                 onChange={handleInputChange}
                             />
                             <Select
-                                name="color"
-                                value={formData.color}
-                                onChange={handleInputChange}
-                            >
-                                <option value="" disabled>-- 색상 선택 --</option>
-                                <option value="red">red</option>
-                                <option value="yellow">yellow</option>
-                                <option value="pink">pink</option>
-                                <option value="black">black</option>
-                            </Select>
-                            <Select
                                 name="category"
                                 value={formData.category}
                                 onChange={handleInputChange}
                             >
                                 <option value="" disabled>-- 카테고리 선택 --</option>
+                                { showPlus &&
+                                <>
                                 <option value="🔗">🔗</option>
                                 <option value="🛒">🛒</option>
                                 <option value="🗄️">🗄️</option>
                                 <option value="⌨️">⌨️</option>
                                 <option value="🎮">🎮</option>
+                                </>
+                                }
+                                <option value="게임">게임</option>
+                                <option value="개발자 도구">개발자 도구</option>
+                                <option value="건강 및 피트니스">건강 및 피트니스</option>
+                                <option value="교육">교육</option>
+                                <option value="그래픽 및 디자인">그래픽 및 디자인</option>
+                                <option value="금융">금융</option>
+                                <option value="날씨">날씨</option>
+                                <option value="지도">지도</option>
+                                <option value="뉴스">뉴스</option>
+                                <option value="도서">도서</option>
+                                <option value="라이프 스타일">라이프 스타일</option>
+                                <option value="비즈니스">비즈니스</option>
+                                <option value="사진 및 비디오">사진 및 비디오</option>
+                                <option value="생산성">생산성</option>
+                                <option value="쇼핑">쇼핑</option>
+                                <option value="소셜 네트워킹">소셜 네트워킹</option>
+                                <option value="스포츠">스포츠</option>
+                                <option value="어린이">어린이</option>
+                                <option value="엔터테인먼트">엔터테인먼트</option>
+                                <option value="여행">여행</option>
+                                <option value="유틸리티">유틸리티</option>
+                                <option value="음식 및 음료">음식 및 음료</option>
+                                <option value="음악">음악</option>
+                                <option value="의료">의료</option>
+                                <option value="잡지 및 신문">잡지 및 신문</option>
                             </Select>
                             <Button type="submit">완료</Button>
                             <Button onClick={closeModal}>취소</Button>
