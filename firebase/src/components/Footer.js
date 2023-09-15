@@ -1,13 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { auth, db } from '../firebase';
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { collection, getDocs, query, where } from "firebase/firestore";
 import { Link, useNavigate } from 'react-router-dom';
 
 const Container = styled.div`
     text-align: center;
     padding: 40px;
+`;
+
+const FooterLink = styled(Link)`
+  color: #ff7895 !important;
 `;
 
 const Footer = () => {
@@ -23,7 +24,7 @@ const Footer = () => {
 
   return (
     <Container>
-      <p>북마크 수정, 삭제는 <a href="mailto:claphyeon@kakao.com">관리자에게 메일</a> 주세요.</p>
+      <p>북마크 수정, 삭제는 <FooterLink to="mailto:claphyeon@kakao.com">관리자에게 메일</FooterLink> 주세요.</p>
     </Container>
   );
 };

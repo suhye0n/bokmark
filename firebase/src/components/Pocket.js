@@ -11,18 +11,18 @@ const Favicon = styled.img`
 `;
 
 const Container = styled.div`
-width: 80%;
-max-width: 800px;
-margin: 0 auto;
-margin-top: -150px;
-z-index: 10;
-position: relative;
+    width: 80%;
+    max-width: 800px;
+    margin: 0 auto;
+    margin-top: -150px;
+    z-index: 10;
+    position: relative;
 `;
 
 const Title = styled.h1`
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  color: #ff7895;
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #ff7895;
 `;
 
 const ContainerBox = styled.div`
@@ -33,31 +33,6 @@ const ContainerBox = styled.div`
     margin-bottom: 20px;
 `;
 
-const Background = styled.div`
-    position: fixed;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, .8);
-`;
-
-const Modal = styled.div`
-    z-index: 999;
-    position: fixed;
-    margin: 0px auto;
-    top: 50%;
-    left: 50%;
-    transform: translate( -50%, -50% );
-    border-radius: 5px;
-    width: 80%;
-    max-width: 800px;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 1px 1px 1px 1px #FF7895;
-    background-color: #fff;
-`;
-
 const Table = styled.table`
     width: 100%;
     border-collapse: collapse;
@@ -66,74 +41,28 @@ const Table = styled.table`
 `;
 
 const TableHeader = styled.th`
-  padding: 10px;
-  fort-weight: bold;
-  border-bottom: 1px solid #dee2e6;
+    padding: 10px;
+    fort-weight: bold;
+    border-bottom: 1px solid #dee2e6;
 `;
 
 const TableRow = styled.tr`
-  &:nth-child(even) {
-  }
+    &:nth-child(even) {
+    }
 `;
 
 const TableCell = styled.td`
-  padding: 10px;
-  border-bottom: 1px solid #dee2e6;
+    padding: 10px;
+    border-bottom: 1px solid #dee2e6;
 `;
 
 const TitleLink = styled(Link)`
-  text-decoration: none;
+    text-decoration: none;
 `;
 
-const WriteButton = styled(Link)`
-  position: fixed;
-  right: 40px;
-  bottom: 40px;
-  box-shadow: 1px 1px 1px 1px #FF7895;
-  padding: 15px 20px;
-  text-decoration: none;
-  border-radius: 50px;
-  border: 1px solid #dee2e6;
-  margin-top: 20px;
-  font-weight: bold;
-  background: #FF7895;
-  
-  * {
-    color: #fff;
-    font-size: 30px;
-  }
-
-  &:hover {
-    opacity: 0.7;
-  }
-`;
-
-const Input = styled.input`
-  display: block;
-  padding: 14px;
-  margin: 8px 0;
-  width: calc(100% - 30px);
-  border: 1px solid #eee;
-  border-radius: 5px;
-`;
-
-const Select = styled.select`
-    display: block;
-  padding: 14px;
-  margin: 8px 0;
-  width: 100%;
-  border: 1px solid #eee;
-  border-radius: 5px;
-`;
-
-const Button = styled.button`
-    padding: 13px 25px;
-    margin-right: 10px;
-    font-size: 1rem;
-    background-color: #ff7895;
-    color: white;
+const DrawerBtn = styled.button`
+    background-color: transparent;
     border: none;
-    border-radius: 0.3rem;
     transition: 0.4s;
     cursor: pointer;
     &:hover {
@@ -141,18 +70,7 @@ const Button = styled.button`
     }
 `;
 
-const DrawerBtn = styled.button`
-background-color: transparent;
-border: none;
-transition: 0.4s;
-cursor: pointer;
-&:hover {
-    opacity: 0.7;
-}
-`;
-
 const Pocket = () => {
-    const navigate = useNavigate();
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('id');
     const storedUser = JSON.parse(localStorage.getItem('user'));
@@ -252,71 +170,6 @@ const Pocket = () => {
             fetchbookmark();
         }
     }, [id, nickname]);
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
-    };
-
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
-        try {
-            const newBookmarkData = {
-                user: nickname,
-                url: formData.url,
-                title: formData.title,
-                category: formData.category,
-                createdAt: new Date(),
-                updatedAt: new Date()
-            };
-
-            if (id) {
-                const bookmarkDocRef = doc(db, 'bookmarks', id);
-                await updateDoc(bookmarkDocRef, {
-                    ...newBookmarkData,
-                    updatedAt: new Date()
-                });
-                alert('북마크가 수정되었습니다.');
-                closeModal();
-            } else {
-                await addDoc(collection(db, 'bookmarks'), newBookmarkData);
-                alert('북마크가 등록되었습니다.');
-                fetchBookmarks();
-                closeModal();
-            }
-
-            setFormData({
-                user: nickname,
-                url: '',
-                title: '',
-                category: '',
-            });
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    if (nickname === 'Anonymous') {
-        return (
-            <div>
-                <p>글을 쓰려면 로그인이 필요합니다.</p>
-            </div>
-        );
-    }
-
-    const openModal = (type) => {
-        setModalType(type);
-        setModalVisible(true);
-    };
-
-    const closeModal = () => {
-        setModalVisible(false);
-        setModalType(null);
-    };
 
     const addToWebDrawer = async (bookmarkId) => {
         try {

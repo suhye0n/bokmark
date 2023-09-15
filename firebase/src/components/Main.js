@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { TbBookmarkPlus, TbEditCircle, TbTrashX } from 'react-icons/tb';
+import { TbBookmarkPlus } from 'react-icons/tb';
 import { MdOutlineReportGmailerrorred } from 'react-icons/md';
 import { FaRegBookmark, FaBookmark } from 'react-icons/fa';
-import { getDocs, query, addDoc, collection, doc, getDoc, setDoc, updateDoc, FieldValue, deleteField } from 'firebase/firestore';
+import { getDocs, query, addDoc, collection, doc, getDoc, setDoc, updateDoc, deleteField } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
@@ -328,14 +328,14 @@ const Main = () => {
 
     const handleReportSubmit = async (e) => {
         e.preventDefault();
-    
+
         if (reportReason.trim() === "") {
             alert("신고 사유를 입력해주세요.");
             return;
         }
-    
+
         const bookmark = bookmarks.find(bm => bm.id === reportBookmarkId);
-    
+
         try {
             await addDoc(collection(db, 'reports'), {
                 bookmarkId: reportBookmarkId,
@@ -344,7 +344,7 @@ const Main = () => {
                 reason: reportReason,
                 timestamp: new Date()
             });
-    
+
             const bookmarkDocRef = doc(db, 'bookmarks', reportBookmarkId);
             const snap = await getDoc(bookmarkDocRef);
             if (snap.exists()) {
@@ -353,14 +353,14 @@ const Main = () => {
                     reportCount: currentReportCount + 1
                 });
             }
-    
+
             alert("신고가 접수되었습니다.");
-            setReportReason('');  // input 필드를 비워줍니다.
+            setReportReason('');
             closeReport();
         } catch (error) {
             console.error(error);
         }
-    };      
+    };
 
     const addToWebDrawer = async (bookmarkId) => {
         try {
@@ -536,7 +536,7 @@ const Main = () => {
             {modalVisible && (
                 <Background>
                     <Modal>
-                        {/* 수정 이미 존재하는 url은 등록하지 못하도록.. */}
+                        {/* 수정: 이미 존재하는 url은 등록하지 못하도록.. */}
                         <form onSubmit={handleSubmit}>
                             <Input
                                 type="text"
@@ -599,7 +599,7 @@ const Main = () => {
                     </Modal>
                 </Background>
             )}
-                       
+
 
             {reportVisible && (
                 <Background>
