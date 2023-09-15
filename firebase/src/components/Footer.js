@@ -23,7 +23,7 @@ const Footer = () => {
 
   return (
     <Container>
-      <p>북마크 수정, 삭제는 관리자에게 메일 주세요.</p>
+      <p>북마크 수정, 삭제는 <a href="mailto:claphyeon@kakao.com">관리자에게 메일</a> 주세요.</p>
     </Container>
   );
 };

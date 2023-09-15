@@ -155,6 +155,9 @@ const Main = () => {
     const nickname = storedUser ? storedUser.nickname : 'Anonymous';
     const [modalType, setModalType] = useState(null);
     const [modalVisible, setModalVisible] = useState(false);
+    const [reportVisible, setReportVisible] = useState(false);
+    const [reportReason, setReportReason] = useState("");
+    const [reportBookmarkId, setReportBookmarkId] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [bookmarks, setBookmarks] = useState([]);
     const [showPlus, setShowPlus] = useState(false);
@@ -309,10 +312,55 @@ const Main = () => {
         setModalVisible(true);
     };
 
+    const openReport = (bookmarkId) => {
+        setReportBookmarkId(bookmarkId);
+        setReportVisible(true);
+    };
+
     const closeModal = () => {
         setModalVisible(false);
         setModalType(null);
     };
+
+    const closeReport = () => {
+        setReportVisible(false);
+    };
+
+    const handleReportSubmit = async (e) => {
+        e.preventDefault();
+    
+        if (reportReason.trim() === "") {
+            alert("신고 사유를 입력해주세요.");
+            return;
+        }
+    
+        const bookmark = bookmarks.find(bm => bm.id === reportBookmarkId);
+    
+        try {
+            await addDoc(collection(db, 'reports'), {
+                bookmarkId: reportBookmarkId,
+                bookmarkTitle: bookmark.title,
+                bookmarkUrl: bookmark.url,
+                reason: reportReason,
+                timestamp: new Date()
+            });
+    
+            const bookmarkDocRef = doc(db, 'bookmarks', reportBookmarkId);
+            const snap = await getDoc(bookmarkDocRef);
+            if (snap.exists()) {
+                const currentReportCount = snap.data().reportCount || 0;
+                await updateDoc(bookmarkDocRef, {
+                    reportCount: currentReportCount + 1
+                });
+            }
+    
+            alert("신고가 접수되었습니다.");
+            setReportReason('');  // input 필드를 비워줍니다.
+            closeReport();
+        } catch (error) {
+            console.error(error);
+        }
+    };      
 
     const addToWebDrawer = async (bookmarkId) => {
         try {
@@ -364,6 +412,19 @@ const Main = () => {
         }
     };
 
+    const reportBookmark = async (bookmarkId, reason = "이유 없음") => {
+        try {
+            await addDoc(collection(db, 'reports'), {
+                bookmarkId,
+                reason,
+                reportedAt: new Date(),
+            });
+            alert('북마크가 신고되었습니다.');
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <HomeContainer>
             <WriteButton className='add' onClick={() => openModal('add')}><TbBookmarkPlus /></WriteButton>
@@ -405,7 +466,9 @@ const Main = () => {
                                                 )}
                                             </TableCell>
                                             <TableCell>
-                                                <MdOutlineReportGmailerrorred />
+                                                <DrawerBtn>
+                                                    <MdOutlineReportGmailerrorred onClick={() => openReport(bookmark.id)} />
+                                                </DrawerBtn>
                                             </TableCell>
                                         </>
                                     }
@@ -430,7 +493,9 @@ const Main = () => {
                                                 )}
                                             </TableCell>
                                             <TableCell>
-                                                <MdOutlineReportGmailerrorred />
+                                                <DrawerBtn>
+                                                    <MdOutlineReportGmailerrorred onClick={() => openReport(bookmark.id)} />
+                                                </DrawerBtn>
                                             </TableCell>
                                         </>
                                     }
@@ -455,7 +520,9 @@ const Main = () => {
                                                 )}
                                             </TableCell>
                                             <TableCell>
-                                                <MdOutlineReportGmailerrorred />
+                                                <DrawerBtn>
+                                                    <MdOutlineReportGmailerrorred onClick={() => openReport(bookmark.id)} />
+                                                </DrawerBtn>
                                             </TableCell>
                                         </TableRow>
                                     </>
@@ -528,6 +595,24 @@ const Main = () => {
                             </Select>
                             <Button type="submit">완료</Button>
                             <Button onClick={closeModal}>취소</Button>
+                        </form>
+                    </Modal>
+                </Background>
+            )}
+                       
+
+            {reportVisible && (
+                <Background>
+                    <Modal>
+                        <form onSubmit={handleReportSubmit}>
+                            <Input
+                                type="text"
+                                placeholder="신고 사유"
+                                value={reportReason}
+                                onChange={e => setReportReason(e.target.value)}
+                            />
+                            <Button type="submit">완료</Button>
+                            <Button onClick={closeReport}>취소</Button>
                         </form>
                     </Modal>
                 </Background>
