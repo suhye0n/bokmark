@@ -237,13 +237,11 @@ const Main = () => {
     const category = new URLSearchParams(location.search).get('category') || '';
 
     const filterBookmarks = (bookmarks, query, category) => {
-        return bookmarks
-            .filter((bookmark) =>
-                bookmark.title.toLowerCase().includes(query.toLowerCase()) && (!category || bookmark.category === category)
-            )
-            .slice(0, 50);
+        return bookmarks.filter((bookmark) =>
+            bookmark.title.toLowerCase().includes(query.toLowerCase()) && (!category || bookmark.category === category)
+        );
     };
-    
+
     useEffect(() => {
         if (id) {
             const fetchbookmark = async () => {
@@ -435,9 +433,6 @@ const Main = () => {
             return bookmarks.sort((a, b) => a.title.localeCompare(b.title));
         }
         if (sortOrder === 'latest') {
-            return bookmarks.sort((a, b) => a.id.localeCompare(b.id));
-        }
-        if (sortOrder === 'oldest') {
             return bookmarks.sort((a, b) => b.id.localeCompare(a.id));
         }
         if (sortOrder === 'popularity') {
@@ -446,7 +441,7 @@ const Main = () => {
                 const webDrawerCountB = b.webDrawerCount || 0;
                 return webDrawerCountB - webDrawerCountA;
             });
-        }  
+        }
         return bookmarks;
     };
 
@@ -459,7 +454,6 @@ const Main = () => {
                     <SortSelect onChange={(e) => setSortOrder(e.target.value)} value={sortOrder}>
                         <option value="title">제목순</option>
                         <option value="latest">최신순</option>
-                        <option value="oldest">오래된순</option>
                         <option value="popularity">인기순</option>
                     </SortSelect>
                 </div>
