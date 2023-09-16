@@ -81,6 +81,14 @@ const DrawerBtn = styled.button`
     }
 `;
 
+const Select = styled.select`
+    display: block;
+    padding: 14px;
+    margin: 8px 0;
+    border: 1px solid #eee;
+    border-radius: 5px;
+`;
+
 const Pocket = () => {
     const location = useLocation();
     const id = new URLSearchParams(location.search).get('id');
@@ -92,6 +100,7 @@ const Pocket = () => {
     const [bookmarks, setBookmarks] = useState([]);
     const [showPlus, setShowPlus] = useState(false);
     const [userBookmarks, setUserBookmarks] = useState([]);
+    const [sortOrder, setSortOrder] = useState('title');
 
     const [formData, setFormData] = useState({
         user: nickname,
@@ -240,10 +249,26 @@ const Pocket = () => {
         }
     };
 
+    const sortBookmarks = (bookmarks) => {
+        if (sortOrder === 'title') {
+          return bookmarks.sort((a, b) => a.title.localeCompare(b.title));
+        }
+        if (sortOrder === 'latest') {
+          return bookmarks.sort((a, b) => b.id.localeCompare(a.id));
+        }
+        return bookmarks;
+      };
+
     return (
         <Container>
             <ContainerBox>
             <Title>웹 서랍</Title>
+                <div>
+                    <Select onChange={(e) => setSortOrder(e.target.value)} value={sortOrder}>
+                        <option value="title">제목순</option>
+                        <option value="latest">최신순</option>
+                    </Select>
+                </div>
                 <Table>
                     <thead>
                         <tr>
@@ -254,9 +279,9 @@ const Pocket = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filterBookmarks(bookmarks, searchQuery, category)
-                            .filter(bookmark => userBookmarks.includes(bookmark.id)) // 이 부분 추가
-                            .map((bookmark, index) => (
+                        {sortBookmarks(filterBookmarks(bookmarks, searchQuery, category))
+                        .filter((bookmark) => userBookmarks.includes(bookmark.id))
+                        .map((bookmark, index) => (
                                 <TableRow key={bookmark.id}>
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>

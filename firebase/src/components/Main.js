@@ -125,11 +125,11 @@ const Input = styled.input`
 
 const Select = styled.select`
     display: block;
-  padding: 14px;
-  margin: 8px 0;
-  width: 100%;
-  border: 1px solid #eee;
-  border-radius: 5px;
+    padding: 14px;
+    margin: 8px 0;
+    width: 100%;
+    border: 1px solid #eee;
+    border-radius: 5px;
 `;
 
 const Button = styled.button`
@@ -157,6 +157,14 @@ cursor: pointer;
 }
 `;
 
+const SortSelect = styled.select`
+    display: block;
+    padding: 14px;
+    margin: 8px 0;
+    border: 1px solid #eee;
+    border-radius: 5px;
+`;
+
 const Main = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -172,6 +180,7 @@ const Main = () => {
     const [bookmarks, setBookmarks] = useState([]);
     const [showPlus, setShowPlus] = useState(false);
     const [userBookmarks, setUserBookmarks] = useState([]);
+    const [sortOrder, setSortOrder] = useState('title');
 
     const [formData, setFormData] = useState({
         user: nickname,
@@ -438,13 +447,27 @@ const Main = () => {
         }
     };
 
+    const sortBookmarks = (bookmarks) => {
+        if (sortOrder === 'title') {
+            return bookmarks.sort((a, b) => a.title.localeCompare(b.title));
+        }
+        if (sortOrder === 'latest') {
+            return bookmarks.sort((a, b) => b.id.localeCompare(a.id));
+        }
+        return bookmarks;
+    };
+
     return (
         <HomeContainer>
             <WriteButton className='add' onClick={() => openModal('add')}><TbBookmarkPlus /></WriteButton>
 
-            { /* 수정: 이름순, 최신순, 인기순 */}
-
             <ContainerBox>
+                <div>
+                    <SortSelect onChange={(e) => setSortOrder(e.target.value)} value={sortOrder}>
+                        <option value="title">제목순</option>
+                        <option value="latest">최신순</option>
+                    </SortSelect>
+                </div>
                 <Table>
                     <thead>
                         <tr>
@@ -457,7 +480,7 @@ const Main = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filterBookmarks(bookmarks, searchQuery, category).map((bookmark, index) => (
+                        {sortBookmarks(filterBookmarks(bookmarks, searchQuery, category)).map((bookmark, index) => (
                             <>
                                 <TableRow key={bookmark.id}>
                                     {showPlus && bookmark.category == "🎮" &&

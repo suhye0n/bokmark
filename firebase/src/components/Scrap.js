@@ -131,11 +131,19 @@ const Input = styled.input`
 
 const Select = styled.select`
     display: block;
-  padding: 14px;
-  margin: 8px 0;
-  width: 100%;
-  border: 1px solid #eee;
-  border-radius: 5px;
+    padding: 14px;
+    margin: 8px 0;
+    width: 100%;
+    border: 1px solid #eee;
+    border-radius: 5px;
+`;
+
+const SortSelect = styled.select`
+    display: block;
+    padding: 14px;
+    margin: 8px 0;
+    border: 1px solid #eee;
+    border-radius: 5px;
 `;
 
 const EditButton = styled.button`
@@ -170,6 +178,7 @@ const Scrap = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [scraps, setScraps] = useState([]);
     const [currentScrapId, setCurrentScrapId] = useState(null);
+    const [sortOrder, setSortOrder] = useState('title');
 
     const [formData, setFormData] = useState({
         user: nickname,
@@ -332,12 +341,28 @@ const Scrap = () => {
         });
     };
 
+    const sortBookmarks = (bookmarks) => {
+        if (sortOrder === 'title') {
+            return bookmarks.sort((a, b) => a.title.localeCompare(b.title));
+        }
+        if (sortOrder === 'latest') {
+            return bookmarks.sort((a, b) => b.id.localeCompare(a.id));
+        }
+        return bookmarks;
+    };
+
     return (
         <HomeContainer>
             <WriteButton className='add' onClick={() => openModal('add')}><TbBookmarkPlus /></WriteButton>
 
             <ContainerBox>
                 <Title>스크랩</Title>
+                <div>
+                    <SortSelect onChange={(e) => setSortOrder(e.target.value)} value={sortOrder}>
+                        <option value="title">제목순</option>
+                        <option value="latest">최신순</option>
+                    </SortSelect>
+                </div>
                 <Table>
                     <thead>
                         <tr>
@@ -348,7 +373,8 @@ const Scrap = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filterScraps(scraps, searchQuery).map((scrap) => (
+
+                        {sortBookmarks(filterScraps(scraps, searchQuery)).map((scrap) => (
                             <TableRow key={scrap.id}>
                                 {scrap.user === nickname && (
                                     <>
