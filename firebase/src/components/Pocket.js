@@ -256,6 +256,13 @@ const Pocket = () => {
         if (sortOrder === 'latest') {
           return bookmarks.sort((a, b) => b.id.localeCompare(a.id));
         }
+        if (sortOrder === 'popularity') {
+            return bookmarks.sort((a, b) => {
+                const webDrawerCountA = a.webDrawerCount || 0;
+                const webDrawerCountB = b.webDrawerCount || 0;
+                return webDrawerCountB - webDrawerCountA;
+            });
+        }
         return bookmarks;
       };
 
@@ -267,6 +274,7 @@ const Pocket = () => {
                     <Select onChange={(e) => setSortOrder(e.target.value)} value={sortOrder}>
                         <option value="title">제목순</option>
                         <option value="latest">최신순</option>
+                        <option value="popularity">인기순</option>
                     </Select>
                 </div>
                 <Table>
@@ -286,7 +294,7 @@ const Pocket = () => {
                                     <TableCell>{index + 1}</TableCell>
                                     <TableCell>
                                         <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                            <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
+                                            <Favicon src={bookmark.favicon} onerror={'%PUBLIC_URL%/ico.ico'} />
                                             {bookmark.title}
                                         </TitleLink>
                                     </TableCell>

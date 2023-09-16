@@ -225,7 +225,6 @@ const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const navigate = useNavigate();
     const [showSidebar, setShowSidebar] = useState(false);
-    const [showPlus, setShowPlus] = useState(false);
     const [scroll, setScroll] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const toggleModal = () => {
@@ -267,11 +266,6 @@ const Header = () => {
         const user = localStorage.getItem('user');
         const storedUser = JSON.parse(localStorage.getItem('user'));
         const nickname = storedUser ? storedUser.nickname : 'Anonymous';
-        if(nickname == "수현") {
-          setShowPlus(true);
-        } else {
-          setShowPlus(false);
-        }
         setIsLoggedIn(!!user);
     }, []);
 
@@ -302,18 +296,6 @@ const Header = () => {
                     <Link to="/">홈</Link>
                     <Link to="/pocket">웹 서랍</Link>
                     <Link to="/scrap">스크랩</Link>
-                    { showPlus &&
-                    <>
-                    <Link to="/?category=🔗">🔗</Link>
-                    <Link to="/?category=🛒">🛒</Link>
-                    <Link to="/?category=🗄️">🗄️</Link>
-                    <Link to="/?category=⌨️">⌨️</Link>
-                    <Link to="/?category=🎮">🎮</Link>
-                    </>
-                    }
-                    <Link to="/?category=">무료 웹 순위</Link>
-                    <Link to="/?category=">유료 웹 순위</Link>
-                    <Link to="/?category=">요즘 뜨는 웹</Link>
                     <Link to="/?category=게임">게임</Link>
                     <Link to="/?category=개발자 도구">개발자 도구</Link>
                     <Link to="/?category=건강 및 피트니스">건강 및 피트니스</Link>

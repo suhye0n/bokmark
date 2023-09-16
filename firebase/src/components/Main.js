@@ -178,7 +178,6 @@ const Main = () => {
     const [reportBookmarkId, setReportBookmarkId] = useState(null);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [bookmarks, setBookmarks] = useState([]);
-    const [showPlus, setShowPlus] = useState(false);
     const [userBookmarks, setUserBookmarks] = useState([]);
     const [sortOrder, setSortOrder] = useState('title');
 
@@ -197,11 +196,6 @@ const Main = () => {
         }
         const user = localStorage.getItem('user');
         setIsLoggedIn(!!user);
-        if (nickname == "수현") {
-            setShowPlus(true);
-        } else {
-            setShowPlus(false);
-        }
         const fetchWebDrawer = async () => {
             try {
                 const userDrawerDocRef = doc(db, 'webDrawer', nickname);
@@ -434,25 +428,19 @@ const Main = () => {
         }
     };
 
-    const reportBookmark = async (bookmarkId, reason = "이유 없음") => {
-        try {
-            await addDoc(collection(db, 'reports'), {
-                bookmarkId,
-                reason,
-                reportedAt: new Date(),
-            });
-            alert('북마크가 신고되었습니다.');
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     const sortBookmarks = (bookmarks) => {
         if (sortOrder === 'title') {
             return bookmarks.sort((a, b) => a.title.localeCompare(b.title));
         }
         if (sortOrder === 'latest') {
             return bookmarks.sort((a, b) => b.id.localeCompare(a.id));
+        }
+        if (sortOrder === 'popularity') {
+            return bookmarks.sort((a, b) => {
+                const webDrawerCountA = a.webDrawerCount || 0;
+                const webDrawerCountB = b.webDrawerCount || 0;
+                return webDrawerCountB - webDrawerCountA;
+            });
         }
         return bookmarks;
     };
@@ -466,6 +454,7 @@ const Main = () => {
                     <SortSelect onChange={(e) => setSortOrder(e.target.value)} value={sortOrder}>
                         <option value="title">제목순</option>
                         <option value="latest">최신순</option>
+                        <option value="popularity">인기순</option>
                     </SortSelect>
                 </div>
                 <Table>
@@ -483,86 +472,28 @@ const Main = () => {
                         {sortBookmarks(filterBookmarks(bookmarks, searchQuery, category)).map((bookmark, index) => (
                             <>
                                 <TableRow key={bookmark.id}>
-                                    {showPlus && bookmark.category == "🎮" &&
-                                        <>
-                                            {/*<TableCell>{index + 1}</TableCell>*/}
-                                            <TableCell>
-                                                <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                                    <Favicon src={bookmark.favicon} onerror={'%PUBLIC_URL%/ico.ico'} />
-                                                    {bookmark.title}
-                                                </TitleLink>
-                                            </TableCell>
-                                            {/*<TableCell>{bookmark.category}</TableCell>*/}
-                                            <TableCell>{bookmark.webDrawerCount || 0}</TableCell>
-                                            <TableCell>
-                                                {userBookmarks.includes(bookmark.id) ? (
-                                                    <DrawerBtn onClick={() => removeFromWebDrawer(bookmark.id)}><FaBookmark /></DrawerBtn>
-                                                ) : (
-                                                    <DrawerBtn onClick={() => addToWebDrawer(bookmark.id)}><FaRegBookmark /></DrawerBtn>
-                                                )}
-                                            </TableCell>
-                                            <TableCell>
-                                                <DrawerBtn>
-                                                    <MdOutlineReportGmailerrorred onClick={() => openReport(bookmark.id)} />
-                                                </DrawerBtn>
-                                            </TableCell>
-                                        </>
-                                    }
+                                    {/*<TableCell>{index + 1}</TableCell>*/}
+                                    <TableCell>
+                                        <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
+                                            <Favicon src={bookmark.favicon} onerror={'%PUBLIC_URL%/ico.ico'} />
+                                            {bookmark.title}
+                                        </TitleLink>
+                                    </TableCell>
+                                    {/*<TableCell>{bookmark.category}</TableCell>*/}
+                                    <TableCell>{bookmark.webDrawerCount || 0}</TableCell>
+                                    <TableCell>
+                                        {userBookmarks.includes(bookmark.id) ? (
+                                            <DrawerBtn onClick={() => removeFromWebDrawer(bookmark.id)}><FaBookmark /></DrawerBtn>
+                                        ) : (
+                                            <DrawerBtn onClick={() => addToWebDrawer(bookmark.id)}><FaRegBookmark /></DrawerBtn>
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        <DrawerBtn>
+                                            <MdOutlineReportGmailerrorred onClick={() => openReport(bookmark.id)} />
+                                        </DrawerBtn>
+                                    </TableCell>
                                 </TableRow>
-                                <TableRow key={bookmark.id}>
-                                    {showPlus && bookmark.category == "🔗" &&
-                                        <>
-                                            {/*<TableCell>{index + 1}</TableCell>*/}
-                                            <TableCell>
-                                                <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                                    <Favicon src={bookmark.favicon} onerror={'%PUBLIC_URL%/ico.ico'} />
-                                                    {bookmark.title}
-                                                </TitleLink>
-                                            </TableCell>
-                                            {/*<TableCell>{bookmark.category}</TableCell>*/}
-                                            <TableCell>{bookmark.webDrawerCount || 0}</TableCell>
-                                            <TableCell>
-                                                {userBookmarks.includes(bookmark.id) ? (
-                                                    <DrawerBtn onClick={() => removeFromWebDrawer(bookmark.id)}><FaBookmark /></DrawerBtn>
-                                                ) : (
-                                                    <DrawerBtn onClick={() => addToWebDrawer(bookmark.id)}><FaRegBookmark /></DrawerBtn>
-                                                )}
-                                            </TableCell>
-                                            <TableCell>
-                                                <DrawerBtn>
-                                                    <MdOutlineReportGmailerrorred onClick={() => openReport(bookmark.id)} />
-                                                </DrawerBtn>
-                                            </TableCell>
-                                        </>
-                                    }
-                                </TableRow>
-                                {bookmark.category !== "🎮" && bookmark.category !== "🔗" &&
-                                    <>
-                                        <TableRow key={bookmark.id}>
-                                            {/*<TableCell>{index + 1}</TableCell>*/}
-                                            <TableCell>
-                                                <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                                    <Favicon src={bookmark.favicon} onerror={'%PUBLIC_URL%/ico.ico'} />
-                                                    {bookmark.title}
-                                                </TitleLink>
-                                            </TableCell>
-                                            {/*<TableCell>{bookmark.category}</TableCell>*/}
-                                            <TableCell>{bookmark.webDrawerCount || 0}</TableCell>
-                                            <TableCell>
-                                                {userBookmarks.includes(bookmark.id) ? (
-                                                    <DrawerBtn onClick={() => removeFromWebDrawer(bookmark.id)}><FaBookmark /></DrawerBtn>
-                                                ) : (
-                                                    <DrawerBtn onClick={() => addToWebDrawer(bookmark.id)}><FaRegBookmark /></DrawerBtn>
-                                                )}
-                                            </TableCell>
-                                            <TableCell>
-                                                <DrawerBtn>
-                                                    <MdOutlineReportGmailerrorred onClick={() => openReport(bookmark.id)} />
-                                                </DrawerBtn>
-                                            </TableCell>
-                                        </TableRow>
-                                    </>
-                                }
                             </>
                         ))}
                     </tbody>
@@ -594,15 +525,6 @@ const Main = () => {
                                 onChange={handleInputChange}
                             >
                                 <option value="" disabled>-- 카테고리 선택 --</option>
-                                {showPlus &&
-                                    <>
-                                        <option value="🔗">🔗</option>
-                                        <option value="🛒">🛒</option>
-                                        <option value="🗄️">🗄️</option>
-                                        <option value="⌨️">⌨️</option>
-                                        <option value="🎮">🎮</option>
-                                    </>
-                                }
                                 <option value="게임">게임</option>
                                 <option value="개발자 도구">개발자 도구</option>
                                 <option value="건강 및 피트니스">건강 및 피트니스</option>

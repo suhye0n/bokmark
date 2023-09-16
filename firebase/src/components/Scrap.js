@@ -348,6 +348,9 @@ const Scrap = () => {
         if (sortOrder === 'latest') {
             return bookmarks.sort((a, b) => b.id.localeCompare(a.id));
         }
+        if (sortOrder === 'color') {
+            return bookmarks.sort((a, b) => a.color.localeCompare(b.color));
+        }
         return bookmarks;
     };
 
@@ -361,13 +364,13 @@ const Scrap = () => {
                     <SortSelect onChange={(e) => setSortOrder(e.target.value)} value={sortOrder}>
                         <option value="title">제목순</option>
                         <option value="latest">최신순</option>
+                        <option value="color">라벨순</option>
                     </SortSelect>
                 </div>
                 <Table>
                     <thead>
                         <tr>
                             <TableHeader>제목</TableHeader>
-                            <TableHeader>라벨</TableHeader>
                             <TableHeader>수정</TableHeader>
                             <TableHeader>삭제</TableHeader>
                         </tr>
@@ -380,11 +383,9 @@ const Scrap = () => {
                                     <>
                                         <TableCell>
                                             <TitleLink target="_blank" rel="noopener noreferrer" to={`${scrap.url}`}>
-                                                <Favicon src={scrap.url + '/favicon.ico'} />
-                                                {scrap.title}
+                                                <span style={{ color: scrap.color }}>{scrap.title}</span>
                                             </TitleLink>
                                         </TableCell>
-                                        <TableCell>{scrap.color}</TableCell>
                                         <TableCell>
                                             <EditButton onClick={() => openModal('edit', scrap.id)}>
                                                 <FaEdit />
