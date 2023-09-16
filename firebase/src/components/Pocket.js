@@ -41,7 +41,7 @@ const ContainerBox = styled.div`
     box-shadow: 1px 1px 1px 1px #FF7895;
     background-color: #fff;
     margin-bottom: 20px;
-    overflow-x: scroll;
+    overflow-x: auto;
 `;
 
 const Table = styled.table`

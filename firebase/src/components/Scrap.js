@@ -18,6 +18,7 @@ const HomeContainer = styled.div`
     margin-top: -150px;
     z-index: 10;
     position: relative;
+    overflow-x: auto;
 `;
 
 const Title = styled.h1`

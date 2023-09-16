@@ -36,7 +36,7 @@ const ContainerBox = styled.div`
     box-shadow: 1px 1px 1px 1px #FF7895;
     background-color: #fff;
     margin-bottom: 20px;
-    overflow-x: scroll;
+    overflow-x: auto;
 `;
 
 const Background = styled.div`
@@ -178,6 +178,7 @@ const Main = () => {
         url: '',
         title: '',
         category: '',
+        favicon: '',
     });
 
     useEffect(() => {
@@ -279,6 +280,7 @@ const Main = () => {
                 url: formData.url,
                 title: formData.title,
                 category: formData.category,
+                favicon: formData.url + 'favicon.ico',
                 createdAt: new Date(),
                 updatedAt: new Date()
             };
@@ -303,6 +305,7 @@ const Main = () => {
                 url: '',
                 title: '',
                 category: '',
+                favicon: '',
             });
         } catch (error) {
             console.error(error);
@@ -445,9 +448,9 @@ const Main = () => {
                 <Table>
                     <thead>
                         <tr>
-                            <TableHeader>번호</TableHeader>
+                            {/*<TableHeader>번호</TableHeader>*/}
                             <TableHeader>제목</TableHeader>
-                            <TableHeader>카테고리</TableHeader>
+                            {/*<TableHeader>카테고리</TableHeader>*/}
                             <TableHeader>웹서랍 수</TableHeader>
                             <TableHeader>웹서랍</TableHeader>
                             <TableHeader>신고</TableHeader>
@@ -459,14 +462,14 @@ const Main = () => {
                                 <TableRow key={bookmark.id}>
                                     {showPlus && bookmark.category == "🎮" &&
                                         <>
-                                            <TableCell>{index + 1}</TableCell>
+                                            {/*<TableCell>{index + 1}</TableCell>*/}
                                             <TableCell>
                                                 <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                                    <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
+                                                    <Favicon src={bookmark.favicon} onerror={'%PUBLIC_URL%/ico.ico'} />
                                                     {bookmark.title}
                                                 </TitleLink>
                                             </TableCell>
-                                            <TableCell>{bookmark.category}</TableCell>
+                                            {/*<TableCell>{bookmark.category}</TableCell>*/}
                                             <TableCell>{bookmark.webDrawerCount || 0}</TableCell>
                                             <TableCell>
                                                 {userBookmarks.includes(bookmark.id) ? (
@@ -486,14 +489,14 @@ const Main = () => {
                                 <TableRow key={bookmark.id}>
                                     {showPlus && bookmark.category == "🔗" &&
                                         <>
-                                            <TableCell>{index + 1}</TableCell>
+                                            {/*<TableCell>{index + 1}</TableCell>*/}
                                             <TableCell>
                                                 <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                                    <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
+                                                    <Favicon src={bookmark.favicon} onerror={'%PUBLIC_URL%/ico.ico'} />
                                                     {bookmark.title}
                                                 </TitleLink>
                                             </TableCell>
-                                            <TableCell>{bookmark.category}</TableCell>
+                                            {/*<TableCell>{bookmark.category}</TableCell>*/}
                                             <TableCell>{bookmark.webDrawerCount || 0}</TableCell>
                                             <TableCell>
                                                 {userBookmarks.includes(bookmark.id) ? (
@@ -513,14 +516,14 @@ const Main = () => {
                                 {bookmark.category !== "🎮" && bookmark.category !== "🔗" &&
                                     <>
                                         <TableRow key={bookmark.id}>
-                                            <TableCell>{index + 1}</TableCell>
+                                            {/*<TableCell>{index + 1}</TableCell>*/}
                                             <TableCell>
                                                 <TitleLink target="_blank" rel="noopener noreferrer" to={`${bookmark.url}`}>
-                                                    <Favicon src={bookmark.url + 'favicon.ico'} onerror={'%PUBLIC_URL%/ico.ico'} />
+                                                    <Favicon src={bookmark.favicon} onerror={'%PUBLIC_URL%/ico.ico'} />
                                                     {bookmark.title}
                                                 </TitleLink>
                                             </TableCell>
-                                            <TableCell>{bookmark.category}</TableCell>
+                                            {/*<TableCell>{bookmark.category}</TableCell>*/}
                                             <TableCell>{bookmark.webDrawerCount || 0}</TableCell>
                                             <TableCell>
                                                 {userBookmarks.includes(bookmark.id) ? (
